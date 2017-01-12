@@ -42,6 +42,54 @@ describe('application logic', () => {
       }));
     });
 
+   it('puts winner of current vote back to entries', () => {
+      expect(
+        next(Map({
+          vote: Map({
+            round: 1,
+            pair: List.of('Trainspotting', '28 Days Later'),
+            tally: Map({
+              'Trainspotting': 4,
+              '28 Days Later': 2
+            })
+          }),
+          entries: List.of('Sunshine', 'Millions', '127 Hours')
+        }))
+      ).to.equal(
+        Map({
+          vote: Map({
+            round: 2,
+            pair: List.of('Sunshine', 'Millions')
+          }),
+          entries: List.of('127 Hours', 'Trainspotting')
+        })
+      );
+    });
+
+    it('puts both from tied vote back to entries', () => {
+      expect(
+        next(Map({
+          vote: Map({
+            round: 1,
+            pair: List.of('Trainspotting', '28 Days Later'),
+            tally: Map({
+              'Trainspotting': 3,
+              '28 Days Later': 3
+            })
+          }),
+          entries: List.of('Sunshine', 'Millions', '127 Hours')
+        }))
+      ).to.equal(
+        Map({
+          vote: Map({
+            round: 2,
+            pair: List.of('Sunshine', 'Millions')
+          }),
+          entries: List.of('127 Hours', 'Trainspotting', '28 Days Later')
+        })
+      );
+    });
+
   describe('vote', () => {
 
     it('creates a tally for the voted entry', () => {
